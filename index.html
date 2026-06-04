@@ -1,426 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASLES // ADVANCED INTERNET PORTAL</title>
-    
+    <title>Cyber-Republic of Asles - Core Mainnet Engine</title>
+    <!-- Supabase Client CDN Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-color: #030307;
-            --panel-color: #090b14;
-            --accent-cyan: #00f0ff;
-            --accent-blue: #1e5eff;
-            --accent-amber: #ffb700;
-            --matrix-green: #00ff66;
-            --text-color: #e2e8f0;
+            --neon-green: #00ff66;
+            --terminal-bg: #0a0a0c;
+            --card-bg: #141419;
+            --text-main: #e0e0e6;
+            --muted-gray: #6c6c7d;
+            --asles-blue: #0044ff;
+            --asles-red: #ff1133;
         }
+
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--terminal-bg);
+            color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
-            margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
-            background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
+            margin: 0;
+            padding: 20px;
         }
+
         header {
-            text-align: center; margin-bottom: 40px;
-            border-bottom: 3px double var(--accent-blue);
-            width: 100%; max-width: 900px; padding-bottom: 20px;
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
         }
-        h1 { color: var(--accent-cyan); margin: 0; font-size: 1.8rem; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
-        .subtitle { color: #4a5d88; font-size: 0.8rem; margin: 8px 0 0 0; font-weight: bold; }
-        
-        .container { width: 100%; max-width: 900px; display: grid; grid-template-columns: 1fr; gap: 35px; }
-        @media(min-width: 768px) { .container { grid-template-columns: 1.1fr 0.9fr; } }
-        
-        .panel {
-            background-color: var(--panel-color);
-            border: 1px solid var(--accent-blue);
-            border-radius: 6px; padding: 25px;
-            box-shadow: inset 0 0 20px rgba(30, 94, 255, 0.2), 0 4px 20px rgba(0,0,0,0.8);
-            position: relative;
-        }
-        h2 { color: var(--accent-cyan); font-size: 1.1rem; margin-top: 0; border-bottom: 1px dashed #1e293b; padding-bottom: 12px; margin-bottom: 20px; }
-        
-        label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8; font-weight: bold; }
-        input, select {
-            width: 100%; background-color: #04050a; border: 1px solid var(--accent-blue);
-            color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 20px; box-sizing: border-box;
-            font-family: inherit; transition: all 0.3s;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 8px rgba(0,240,255,0.3); }
-        
-        button {
-            width: 100%; background-color: var(--accent-blue); color: #fff; border: none;
-            padding: 14px; font-weight: bold; font-family: inherit; cursor: pointer; border-radius: 4px;
-            letter-spacing: 1px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(30,94,255,0.3);
-        }
-        button:hover { background-color: #1a4fd4; border: 1px solid var(--accent-cyan); box-shadow: 0 0 15px rgba(0,240,255,0.4); }
-        
-        .error-msg { background-color: rgba(220,38,38,0.15); border: 1px solid #dc2626; color: #f87171; padding: 12px; font-size: 0.85rem; margin-bottom: 20px; font-weight: bold; border-radius: 4px; display: none; }
-        
-        .lock-banner {
-            background-color: rgba(0, 255, 102, 0.05); border: 2px solid var(--matrix-green);
-            color: var(--matrix-green); padding: 18px; text-align: center;
-            font-weight: bold; border-radius: 4px; margin-top: 10px; display: none;
-            text-shadow: 0 0 5px rgba(0,255,102,0.3);
-        }
-        
-        .camera-box {
-            border: 1px dashed var(--accent-blue); background: #04050a;
-            border-radius: 4px; padding: 10px; margin-bottom: 20px; text-align: center;
-        }
-        video, canvas { display: none; width: 100%; max-width: 200px; border: 1px solid var(--accent-cyan); border-radius: 4px; margin: 10px auto; }
-        img#snapshot-preview { display: none; width: 100%; max-width: 120px; border: 1px solid var(--matrix-green); margin: 10px auto; }
 
-        #passport-output-zone { display: none; margin-top: 25px; text-align: center; }
-        #final-card-canvas { display: block; max-width: 100%; height: auto; margin: 15px auto; border: 1px solid var(--accent-cyan); }
+        .broadcast-banner {
+            background: linear-gradient(90deg, var(--asles-red), var(--asles-blue));
+            color: #fff;
+            padding: 10px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
 
-        .proposal-block { background: #04050a; padding: 18px; border-radius: 4px; margin-bottom: 20px; border-left: 4px solid var(--accent-amber); }
-        .prop-title { color: #fff; font-size: 0.95rem; margin: 0 0 8px 0; font-weight: bold; }
-        .prop-desc { font-size: 0.8rem; color: #94a3b8; margin: 0 0 15px 0; line-height: 1.4; }
-        .vote-btns { display: flex; gap: 12px; }
-        .vote-btn { padding: 8px 14px; font-size: 0.8rem; flex: 1; font-weight: bold; }
-        .vote-btn.yes { background-color: #047857; }
-        .vote-btn.no { background-color: #b91c1c; }
-        .metrics { font-size: 0.75rem; color: #64748b; margin-top: 10px; display: flex; justify-content: space-between; font-weight: bold; }
-        #voting-lockout-msg { color: #64748b; text-align: center; margin-top: 40px; border: 1px dashed #1e293b; padding: 20px; }
-        #voting-booth-content { display: none; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .terminal-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--muted-gray);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .terminal-card.active-border {
+            border-color: var(--neon-green);
+        }
+
+        .card-header {
+            background-color: #1c1c24;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--muted-gray);
+            color: var(--neon-green);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px dashed var(--muted-gray);
+            margin: 15px 0;
+        }
+
+        .text-muted { color: var(--muted-gray); }
+        .text-success { color: var(--neon-green); }
+        .text-warning { color: #ffcc00; }
+        .text-danger { color: var(--asles-red); }
+
+        /* Form & Buttons */
+        .input-terminal {
+            background-color: #000;
+            border: 1px solid var(--muted-gray);
+            color: var(--neon-green);
+            padding: 10px;
+            font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        .input-terminal:focus {
+            outline: none;
+            border-color: var(--neon-green);
+        }
+
+        .btn-terminal {
+            background-color: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 20px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-terminal:hover:not(:disabled) {
+            background-color: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .btn-terminal:disabled {
+            border-color: var(--muted-gray);
+            color: var(--muted-gray);
+            cursor: not-allowed;
+        }
+
+        /* Passport Assets Display Template */
+        .passport-display-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        canvas {
+            background-color: #222;
+            max-width: 100%;
+            height: auto;
+            border: 1px dashed var(--muted-gray);
+        }
+
+        /* Modules */
+        .ledger-row, .prop-block, .course-block {
+            background-color: #0a0a0c;
+            border: 1px solid #25252e;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .progress-container {
+            background-color: #222;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            background-color: var(--neon-green);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .vote-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
     </style>
-
-    <script>
-        // Core framework state variables
-        let cameraStream = null;
-        let biometricImageBase64 = null;
-        let generatedNodeID = "";
-        let hasVotedOnTracker = {};
-
-        // [A] CAMERA SYSTEM CONTROLLER
-        async function initializeCamera() {
-            const videoElement = document.getElementById('webcam-stream');
-            const startBtn = document.getElementById('start-cam-btn');
-            const captureBtn = document.getElementById('capture-snap-btn');
-            const previewImg = document.getElementById('snapshot-preview');
-
-            try {
-                cameraStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user" },
-                    audio: false
-                });
-                videoElement.srcObject = cameraStream;
-                videoElement.style.display = "block";
-                startBtn.style.display = "none";
-                captureBtn.style.display = "block";
-                previewImg.style.display = "none";
-                clearError();
-            } catch (err) {
-                showError("Camera device access denied or hardware not found.");
-            }
-        }
-
-        // [B] CAPTURE SNAPSHOT FRAME
-        function captureSnapshot() {
-            const video = document.getElementById('webcam-stream');
-            const canvas = document.getElementById('hidden-video-canvas');
-            const preview = document.getElementById('snapshot-preview');
-            const captureBtn = document.getElementById('capture-snap-btn');
-            const context = canvas.getContext('2d');
-
-            canvas.width = video.videoWidth || 300;
-            canvas.height = video.videoHeight || 300;
-            
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            biometricImageBase64 = canvas.toDataURL('image/jpeg');
-
-            preview.src = biometricImageBase64;
-            preview.style.display = "block";
-            video.style.display = "none";
-            captureBtn.textContent = "CAPTURE CAPTURED // RETAKE";
-            captureBtn.style.backgroundColor = "#3d7eff";
-            
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-            }
-        }
-
-        // [C] FIELD INJECTION VALIDATION TRACK
-        function processPassportGeneration(event) {
-            event.preventDefault();
-            
-            const handleInput = document.getElementById('handle-input').value.trim();
-            const classInput = document.getElementById('class-input').value;
-            
-            if (!biometricImageBase64) {
-                showError("Identity Error: A face verification capture stream is required.");
-                return;
-            }
-
-            const cleanString = handleInput.toLowerCase().replace(/[\s_\-]/g, '');
-
-            if (classInput === "Founder Network Tier") {
-                if (cleanString.includes("founder") || cleanString.includes("admin")) {
-                    showError("Security Alert: System core credentials cannot be manually provisioned.");
-                    return;
-                }
-            } else {
-                if (cleanString.includes("founder") || cleanString.includes("admin")) {
-                    showError("Naming Violation: Restricted mainframe keywords detected.");
-                    return;
-                }
-            }
-
-            clearError();
-
-            const randomSerial = Math.floor(10000 + Math.random() * 90000);
-            generatedNodeID = `ASLES-${randomSerial}`;
-            const stamp = new Date().toLocaleString();
-            const secureBlockSig = Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-
-            document.getElementById('registration-form').style.display = "none";
-            document.getElementById('lockout-banner').style.display = "block";
-
-            renderCardCanvas(generatedNodeID, handleInput, classInput, stamp, secureBlockSig);
-        }
-
-        // [D] OFFLINE NATIVE GRAPHICS AND QR PATTERN MATRIX ENGINE
-        function renderCardCanvas(nodeId, handle, tier, timestamp, hashString) {
-            const canvas = document.getElementById('final-card-canvas');
-            const ctx = canvas.getContext('2d');
-
-            // Canvas Background Base
-            ctx.fillStyle = '#070914';
-            ctx.fillRect(0, 0, 750, 450);
-
-            // Double Cyan/Blue Outer Frame Geometry
-            ctx.strokeStyle = '#1e5eff';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(12, 12, 726, 426);
-            ctx.strokeStyle = '#00f0ff';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(18, 18, 714, 414);
-
-            // HUD Crosshair Tech Accents
-            const offsets = [25, 35];
-            ctx.strokeStyle = '#1e5eff';
-            offsets.forEach(o => {
-                ctx.beginPath(); ctx.moveTo(o, 25); ctx.lineTo(o, 45); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(25, o); ctx.lineTo(45, o); ctx.stroke();
-            });
-
-            // Write Passport Details
-            ctx.fillStyle = '#00f0ff';
-            ctx.font = "bold 18px 'Courier New', monospace";
-            ctx.fillText("CYBER REPUBLIC OF ASLES // INFRASTRUCTURE NODE", 55, 45);
-
-            ctx.strokeStyle = '#1e5eff';
-            ctx.beginPath(); ctx.moveTo(55, 58); ctx.lineTo(440, 58); ctx.stroke();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = "16px 'Courier New', monospace";
-            ctx.fillText(`MAINNET NODE ID  : ${nodeId}`, 55, 110);
-            ctx.fillText(`CITIZEN ALIAS    : @${handle}`, 55, 150);
-            
-            ctx.fillStyle = '#ffb700';
-            ctx.fillText(`OPERATIONAL TIER : ${tier.toUpperCase()}`, 55, 190);
-            
-            ctx.fillStyle = '#94a3b8';
-            ctx.fillText(`VALID TIMESTAMP  : ${timestamp}`, 55, 230);
-            ctx.font = "13px 'Courier New', monospace";
-            ctx.fillStyle = '#4a5d88';
-            ctx.fillText(`BLOCK SIG SHA256 : ${hashString.substring(0, 32)}...`, 55, 275);
-
-            ctx.fillStyle = '#00ff66';
-            ctx.font = "bold 13px 'Courier New', monospace";
-            ctx.fillText("SECURITY STATUS: IDENTITY BUILT // OFFLINE CORE MAINNET ACTIVE", 55, 385);
-
-            // Draw Selfie Snapshot image
-            const userImg = new Image();
-            userImg.onload = function() {
-                ctx.drawImage(userImg, 540, 45, 150, 180);
-                ctx.strokeStyle = '#00f0ff';
-                ctx.strokeRect(540, 45, 150, 180);
-
-                // NATIVE RUNTIME QR CODE GRAPHICS GENERATOR (Zero Network Requests Required)
-                generateNativeQRMatrix(ctx, 545, 260, 140, hashString);
-                
-                // Unshroud the interactive components
-                document.getElementById('passport-output-zone').style.display = "block";
-                document.getElementById('voting-lockout-msg').style.display = "none";
-                document.getElementById('voting-booth-content').style.display = "block";
-            };
-            userImg.src = biometricImageBase64;
-        }
-
-        // Native canvas procedural QR code rendering system
-        function generateNativeQRMatrix(ctx, startX, startY, size, hash) {
-            ctx.fillStyle = '#070914';
-            ctx.fillRect(startX, startY, size, size);
-            ctx.strokeStyle = '#1e5eff';
-            ctx.strokeRect(startX, startY, size, size);
-
-            // Create authentic verification patterns
-            ctx.fillStyle = '#00f0ff';
-            ctx.fillRect(startX + 10, startY + 10, 35, 35);
-            ctx.fillStyle = '#070914';
-            ctx.fillRect(startX + 17, startY + 17, 21, 21);
-            ctx.fillStyle = '#00f0ff';
-            ctx.fillRect(startX + 22, startY + 22, 11, 11);
-
-            ctx.fillRect(startX + size - 45, startY + 10, 35, 35);
-            ctx.fillStyle = '#070914';
-            ctx.fillRect(startX + size - 38, startY + 17, 21, 21);
-            ctx.fillStyle = '#00f0ff';
-            ctx.fillRect(startX + size - 33, startY + 22, 11, 11);
-
-            ctx.fillRect(startX + 10, startY + size - 45, 35, 35);
-            ctx.fillStyle = '#070914';
-            ctx.fillRect(startX + 17, startY + size - 38, 21, 21);
-            ctx.fillStyle = '#00f0ff';
-            ctx.fillRect(startX + 22, startY + size - 33, 11, 11);
-
-            // Render simulated data nodes using unique hash bytes sequence
-            let index = 0;
-            const blockSize = 5;
-            for (let y = startY + 50; y < startY + size - 50; y += blockSize) {
-                for (let x = startX + 15; x < startX + size - 15; x += blockSize) {
-                    let charCode = hash.charCodeAt(index % hash.length);
-                    if ((charCode + index) % 3 === 0) {
-                        ctx.fillStyle = '#00f0ff';
-                        ctx.fillRect(x, y, blockSize - 1, blockSize - 1);
-                    }
-                    index++;
-                }
-            }
-        }
-
-        // [E] DISK MEDIA WRITER (.PNG DOWNLOAD TARGET)
-        function downloadPassportPNG() {
-            const canvas = document.getElementById('final-card-canvas');
-            const link = document.createElement('a');
-            link.download = `${generatedNodeID}_mainframe_passport.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-
-        // [F] ANTI-SPAM BALLOT CONTROLLERS
-        function castVote(proposalId, choice) {
-            if (hasVotedOnTracker[proposalId]) {
-                alert("[MAINFRAME DENIAL] Node has already logged a confirmation token for this proposal block.");
-                return;
-            }
-            const countSpan = document.getElementById(`${proposalId}-${choice}-count`);
-            countSpan.textContent = parseInt(countSpan.textContent) + 1;
-
-            hasVotedOnTracker[proposalId] = true;
-            alert("[SUCCESS] Dynamic vote sequence stored successfully inside node state!");
-        }
-
-        function showError(msg) {
-            const box = document.getElementById('error-box');
-            box.textContent = msg;
-            box.style.display = "block";
-        }
-        function clearError() {
-            document.getElementById('error-box').style.display = "none";
-        }
-    </script>
 </head>
 <body>
 
+    <!-- SYSTEM ALERTS BANNER -->
+    <div class="broadcast-banner">
+        // LIVE BROADCAST // GLOBAL MAINNET ONLINE // LAUNCH DAY CELEBRATION ACTIVE: JUNE 5, 2026 //
+    </div>
+
     <header>
-        <h1>CYBER REPUBLIC OF ASLES</h1>
-        <p class="subtitle">// OFFLINE-READY FRONTEND APPLICATION CORE INTERFACE //</p>
+        <h1>CYBER-REPUBLIC OF ASLES</h1>
+        <div class="text-muted">SYSTEM INTERFACE ARCHITECTURE // OMNI-MINISTER MANAGEMENT CORE</div>
     </header>
 
-    <div class="container">
-        
-        <div class="panel">
-            <h2>[01] SECURE PASSPORT COMPILATION ENGINE</h2>
-            
-            <div id="error-box" class="error-msg"></div>
+    <div class="main-container">
 
-            <div id="lockout-banner" class="lock-banner">
-                🔒 STATUS: SYSTEM CREDENTIAL BOUND & LOCKED
-            </div>
-
-            <form id="registration-form" onsubmit="processPassportGeneration(event)">
-                <label for="handle-input">Network Handle Alias:</label>
-                <input type="text" id="handle-input" placeholder="Specify node alias identifier..." required autocomplete="off">
+        <!-- MODULE [01]: SECURE PASSPORT COMPILATION ENGINE -->
+        <div class="terminal-card active-border">
+            <div class="card-header">[01] SECURE PASSPORT COMPILATION ENGINE</div>
+            <div class="card-body">
+                <p class="text-muted">VERIFY BIOMETRIC PARITY & CONFLATE DATA NODE TO THE MAINNET</p>
+                <label for="nodeIdInput">GENERATE TARGET NODE UNIQUE IDENTIFIER:</label>
+                <input type="text" id="nodeIdInput" class="input-terminal" placeholder="e.g., ASLES-NODE-88A2">
+                <button class="btn-terminal" onclick="compilePassport()">COMPILE DIGITAL PASSPORT</button>
                 
-                <label for="class-input">Operational Security Access Class:</label>
-                <select id="class-input">
-                    <option value="Standard Data Node">Data Node (Standard Registry)</option>
-                    <option value="Liquidity Sub-System Miner">Crypto Miner (Asset Engine)</option>
-                    <option value="Core Infrastructure Sentinel">Cyber Security (Net Sentinel)</option>
-                    <option value="Founder Network Tier">Founder (Requires Automated Inspection)</option>
-                </select>
-                
-                <label>Biometric Profile Selfie Verification:</label>
-                <div class="camera-box">
-                    <button type="button" id="start-cam-btn" onclick="initializeCamera()" style="background-color: #141b2d; border: 1px solid var(--accent-blue);">INITIALIZE PHONE CAMERA</button>
-                    <video id="webcam-stream" autoplay playsinline></video>
-                    <button type="button" id="capture-snap-btn" onclick="captureSnapshot()" style="display:none; background-color: var(--accent-amber); margin-top:10px;">SNAP VERIFICATION PHOTO</button>
-                    <img id="snapshot-preview" alt="Snapshot Preview">
+                <div class="passport-display-box">
+                    <canvas id="passportCanvas" width="400" height="250"></canvas>
+                    <button class="btn-terminal" id="downloadIdBtn" style="display:none;" onclick="downloadPassport()">EXPORT IDENTIFICATION PACK</button>
                 </div>
-
-                <button type="submit">EXECUTE VALIDATION & COMPILE CARD</button>
-            </form>
-
-            <div id="passport-output-zone">
-                <p style="color: var(--matrix-green); font-weight: bold; margin: 0;">✓ IDENTITY PASSPORT GENERATED SUCCESSFULLY!</p>
-                <canvas id="final-card-canvas" width="750" height="450"></canvas>
-                <button type="button" onclick="downloadPassportPNG()" style="background-color: #047857;">SAVE AS HIGH-RES .PNG FILE</button>
             </div>
         </div>
 
-        <div class="panel">
-            <h2>[02] LEGISLATION BOOTH</h2>
-            
-            <div id="voting-lockout-msg">
-                🔒 ACCESS RESTRICTED<br><br>
-                You must dynamically verify your biometric identity on the left control panel to register a secure Node ID before you are permitted to vote.
-            </div>
-
-            <div id="voting-booth-content">
-                <p style="font-size:0.8rem; color:var(--matrix-green); font-weight:bold; margin-bottom:20px; text-align:center;">
-                    ✓ PASSPORT SYNCHRONIZED // SIGNATURE CHANNELS LIVE
-                </p>
-
-                <div class="proposal-block">
-                    <div class="prop-title">PROP #001 - Public Web Mainnet Ledger</div>
-                    <div class="prop-desc">Should the primary ASLES hardware console system data pipeline be made fully viewable via public web servers?</div>
-                    <div class="vote-btns">
-                        <button class="vote-btn yes" onclick="castVote('prop1', 'yes')">AFFIRMATIVE</button>
-                        <button class="vote-btn no" onclick="castVote('prop1', 'no')">NEGATIVE</button>
-                    </div>
-                    <div class="metrics">
-                        <span>YES: <span id="prop1-yes-count">142</span> nodes</span>
-                        <span>NO: <span id="prop1-no-count">8</span> nodes</span>
-                    </div>
+        <!-- MODULE [02]: CENTRAL REGISTRY LEDGER -->
+        <div class="terminal-card">
+            <div class="card-header">[02] SYSTEM REGISTRY LEDGER</div>
+            <div class="card-body">
+                <p class="text-muted">LIVE PIPELINE CONNECTED // TARGETING REGISTRY TABLE</p>
+                <hr>
+                <div id="ledger-terminal-output">
+                    <div class="text-warning">// SYNCHRONIZING WITH ASLES MAINNET NODES... //</div>
                 </div>
+            </div>
+        </div>
 
-                <div class="proposal-block">
-                    <div class="prop-title">PROP #002 - Implement Token Staking</div>
-                    <div class="prop-desc">Authorize automated code blocks to issue a 5% mining yield incentive to all verified system validation nodes.</div>
-                    <div class="vote-btns">
-                        <button class="vote-btn yes" onclick="castVote('prop2', 'yes')">AFFIRMATIVE</button>
-                        <button class="vote-btn no" onclick="castVote('prop2', 'no')">NEGATIVE</button>
-                    </div>
-                    <div class="metrics">
-                        <span>YES: <span id="prop2-yes-count">97</span> nodes</span>
-                        <span>NO: <span id="prop2-no-count">34</span> nodes</span>
-                    </div>
+        <!-- MODULE [03]: LEGISLATION BOOTH -->
+        <div class="terminal-card">
+            <div class="card-header">[03] SOVEREIGN LEGISLATION BOOTH</div>
+            <div class="card-body">
+                <p class="text-muted">DECENTRALIZED CIVIC DIRECTIVES // CHRONO-LOCK ACTIVE</p>
+                <hr>
+                <div id="legislation-booth-output">
+                    <!-- Dynamic Loading -->
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE [04]: E-LEARNING ACADEMY PLATFORM -->
+        <div class="terminal-card education-sector">
+            <div class="card-header">[04] ASLES DEVELOPER ACADEMY (v1.0)</div>
+            <div class="card-body">
+                <p class="text-muted">MINISTRY OF SKILL & TECH EDUCATION PIPELINE</p>
+                <hr>
+                <div id="academy-platform-output">
+                    <!-- Dynamic Loading -->
                 </div>
             </div>
         </div>
 
     </div>
 
-    <canvas id="hidden-video-canvas" width="300" height="300"></canvas>
+    <script>
+    // ==========================================
+// KEY SETTINGS & DATABASE PARITY ROUTERS
+// ==========================================
+const SUPABASE_URL = 'https://qxbfhggdjfnzvzknvizz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_BxEt_2COItXj6oTrXaH7lg_F0EyZi8P';
+
+// Live Mainnet Client Initialization
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Global state tracking
+let currentAuthenticatedNode = "";
+
+// ==========================================
+// PROPOSALS DATA LOG
+// ==========================================
+const propositionsList = [
+    { id: "PROP #001", title: "Public Web Mainnet Ledger", desc: "Expose central node identity tracking logs and database tables directly to external read queries via frontend application cores.", yes: 142, no: 8 },
+    { id: "PROP #002", title: "Token Staking Rules", desc: "Authorize specific transaction script blocks to allocate up to a 5.0% mining yield incentive matrix for validator nodes.", yes: 97, no: 34 },
+    { id: "PROP #003", title: "Education & Skills Sector Allocation", desc: "Authorize a permanent 20% fiscal allocation shift to launch technical developer academies and graphic design guilds.", yes: 0, no: 0 }
+];
+
+// ==========================================
+// EDUCATION COURSE DATA LOG
+// ==========================================
+const coursesList = [
+    { id: "ASM-101", title: "Core Mainnet Architecture & Git Flows", desc: "Learn to manage static HTML frontends and synchronize live framework data structures.", totalModules: 4, reqLevel: "LEVEL_01" },
+    { id: "ASM-102", title: "Canvas UI Rendering & Heraldry Assets", desc: "Master programmatic manipulation of national visual structures, including flag 1000020156.png and seal 1000020209.jpg.", totalModules: 3, reqLevel: "LEVEL_01" }
+];
+
+// ==========================================
+// INITIALIZER ROUTINE
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    initializeCanvasPlaceholder();
+    fetchMainnetLedger();
+    renderLegislationBooth();
+    renderAcademyPlatform();
+});
+
+// ==========================================
+// MODULE 01: PASSPORT CANVAS ENGINE
+// ==========================================
+function initializeCanvasPlaceholder() {
+    const canvas = document.getElementById('passportCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#1c1c24';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#6c6c7d';
+    ctx.font = '12px Courier New';
+    ctx.fillText('// PIPELINE IDLE: AWAITING COMPILATION EXECUTION //', 20, 125);
+}
+
+function compilePassport() {
+    const nodeInput = document.getElementById('nodeIdInput').value.trim();
+    if (!nodeInput) {
+        alert("CRITICAL ERROR: Valid node string parameter required.");
+        return;
+    }
+
+    currentAuthenticatedNode = nodeInput.toUpperCase();
+    const canvas = document.getElementById('passportCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Render background flag pattern mimicking tricolor colors sequentially (1000020156.png)
+    ctx.fillStyle = '#009933'; // Asles Green
+    ctx.fillRect(0, 0, canvas.width, 83);
+    ctx.fillStyle = '#ff1133'; // Asles Red
+    ctx.fillRect(0, 83, canvas.width, 84);
+    ctx.fillStyle = '#0044ff'; // Asles Blue
+    ctx.fillRect(0, 167, canvas.width, 83);
+
+    // Add semi-opaque overlay window for technical read data readability
+    ctx.fillStyle = 'rgba(10, 10, 12, 0.85)';
+    ctx.fillRect(15, 15, canvas.width - 30, canvas.height - 30);
+    ctx.strokeStyle = '#00ff66';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+
+    // Draw text architecture
+    ctx.fillStyle = '#00ff66';
+    ctx.font = 'bold 14px Courier New';
+    ctx.fillText('CYBER-REPUBLIC OF ASLES', 30, 45);
+    
+    ctx.fillStyle = '#e0e0e6';
+    ctx.font = '11px Courier New';
+    ctx.fillText(`PASSPORT IDENTITY TOKEN: ${currentAuthenticatedNode}`, 30, 80);
+    ctx.fillText(`CLEARANCE STRUCTURE   : LEVEL_01`, 30, 105);
+    ctx.fillText(`STAKING YIELD LEVEL   : 5.0% [PROP #002]`, 30, 130);
+    ctx.fillText(`BADGE STATUS DATA     : [ FOUNDING NODE ]`, 30, 155);
+    ctx.fillText(`ISSUED CLOCK TIMESTAMP: 2026-06-05`, 30, 180);
+
+    // Draw abstract programmatic representations of official seal 1000020209.jpg on passport
+    ctx.beginPath();
+    ctx.arc(330, 130, 35, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(0, 255, 102, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(0, 255, 102, 0.2)';
+    ctx.fill();
+    
+    ctx.fillStyle = '#00ff66';
+    ctx.font = 'bold 8px Courier New';
+    ctx.fillText('SEAL', 318, 128);
+    ctx.fillText('PASSED', 313, 138);
+
+    document.getElementById('downloadIdBtn').style.display = 'inline-block';
+    
+    // Broadcast execution command directly to persistent database layer
+    registerNewNode(currentAuthenticatedNode);
+    syncNodeProgress();
+}
+
+function downloadPassport() {
+    const canvas = document.getElementById('passportCanvas');
+    const image = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = `ASLES_PASSPORT_${currentAuthenticatedNode}.png`;
+    link.href = image;
+    link.click();
+}
+
+// ==========================================
+// MODULE 02: DATABASE LOG PIPELINE
+// ==========================================
+async function registerNewNode(nodeId) {
+    try {
+        const { error } = await supabase
+            .from('citizens_ledger')
+            .insert([{ node_id: nodeId, clearance_level: 'LEVEL_01', staking_yield: 5.0, status: 'ACTIVE' }]);
+        if (error) throw error;
+        fetchMainnetLedger();
+    } catch (err) {
+        console.error("Ledger Broadcast Error:", err.message);
+    }
+}
+
+async function fetchMainnetLedger() {
+    const ledgerContainer = document.getElementById('ledger-terminal-output');
+
+    try {
+        const { data: nodes, error } = await supabase
+            .from('citizens_ledger')
+            .select('*')
+            .order('registered_at', { ascending: false })
+            .limit(50);
+
+        if (error) throw error;
+        ledgerContainer.innerHTML = '';
+
+        if(nodes.length === 0) {
+            ledgerContainer.innerHTML = `<div class="text-warning">// MAINNET ONLINE: NO REGISTERED CITIZEN NODES DETECTED //</div>`;
+            return;
+        }
+
+        nodes.forEach(node => {
+            const date = new Date(node.registered_at).toLocaleDateString();
+            const row = document.createElement('div');
+            row.className = 'ledger-row';
+            row.innerHTML = `
+                <span class="text-success">[ ${node.status} ]</span> 
+                <strong>${node.node_id}</strong> | Clearance: ${node.clearance_level} | Yield Staking: ${Number(node.staking_yield).toFixed(1)}% | Registered: ${date}
+            `;
+            ledgerContainer.appendChild(row);
+        });
+    } catch (err) {
+        ledgerContainer.innerHTML = `<div class="text-danger">// ERROR FETCHING MAINNET PIPELINE: ${err.message} //</div>`;
+    }
+}
+
+// ==========================================
+// MODULE 03: LEGISLATION SYSTEM
+// ==========================================
+function renderLegislationBooth() {
+    const container = document.getElementById('legislation-booth-output');
+    container.innerHTML = '';
+
+    propositionsList.forEach((prop, index) => {
+        const block = document.createElement('div');
+        block.className = 'prop-block';
+        block.innerHTML = `
+            <strong>${prop.id}: ${prop.title}</strong>
+            <p class="text-muted" style="font-size:12px; margin: 8px 0;">${prop.desc}</p>
+            <div class="text-muted" style="font-size:11px;" id="votes-count-${index}">
+                CURRENT METRIC COUNTS: <span class="text-success">${prop.yes} NODES YES</span> // <span class="text-danger">${prop.no} NODES NO</span>
+            </div>
+            <div class="vote-actions">
+                <button class="btn-terminal" onclick="castVote(${index}, 'yes')">VOTE YES</button>
+                <button class="btn-terminal" onclick="castVote(${index}, 'no')">VOTE NO</button>
+            </div>
+        `;
+        container.appendChild(block);
+    });
+}
+
+function castVote(index, choice) {
+    if(!currentAuthenticatedNode) {
+        alert("SECURITY DISCONNECT: You must compile a digital identity card in Module [01] before routing nodes to vote.");
+        return;
+    }
+    if(choice === 'yes') propositionsList[index].yes++;
+    else propositionsList[index].no++;
+    
+    document.getElementById(`votes-count-${index}`).innerHTML = `
+        CURRENT METRIC COUNTS: <span class="text-success">${propositionsList[index].yes} NODES YES</span> // <span class="text-danger">${propositionsList[index].no} NODES NO</span>
+    `;
+    alert(`VOTE ACCOUNTED // Node ${currentAuthenticatedNode} cast ballot on proposal ${propositionsList[index].id}`);
+}
+
+// ==========================================
+// MODULE 04: EDUCATION PLATFORM TRACKS
+// ==========================================
+function renderAcademyPlatform() {
+    const container = document.getElementById('academy-platform-output');
+    container.innerHTML = '';
+
+    coursesList.forEach((course, index) => {
+        const block = document.createElement('div');
+        block.className = 'course-block';
+        block.innerHTML = `
+            <div class="course-header">
+                <span class="text-success">[ ${course.id} ]</span> <strong>${course.title}</strong>
+            </div>
+            <p class="text-muted" style="font-size:12px; margin:8px 0;">${course.desc}</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar-${course.id}" style="width: 0%"></div>
+            </div>
+            <button class="btn-terminal" id="btn-course-${course.id}" onclick="launchModule('${course.id}')">INITIALIZE PROTOCOL LABS</button>
+        `;
+        container.appendChild(block);
+    });
+}
+
+async function syncNodeProgress() {
+    if (!currentAuthenticatedNode) return;
+
+    try {
+        const { data: progress, error } = await supabase
+            .from('student_progress')
+            .select('*')
+            .eq('node_id', currentAuthenticatedNode);
+
+        if (error) throw error;
+
+        progress.forEach(track => {
+            const course = coursesList.find(c => c.id === track.course_id);
+            if (course) {
+                const percent = (track.completed_modules / course.totalModules) * 100;
+                document.getElementById(`progress-bar-${track.course_id}`).style.width = `${percent}%`;
+            }
+        });
+    } catch (err) {
+        console.error("// ACADEMY SYNC FAULT //", err.message);
+    }
+}
+
+async function launchModule(courseId) {
+    if(!currentAuthenticatedNode) {
+        alert("ACCESS DENIED: Connect active identity node terminal to ingest academy documentation.");
+        return;
+    }
+
+    alert(`// INITIALIZING ${courseId} CRITICAL TRAINING CONSOLE CHALLENGE... //`);
+    
+    const course = coursesList.find(c => c.id === courseId);
+    document.getElementById(`progress-bar-${courseId}`).style.width = '100%';
+    
+    alert(`// CHALLENGE COMPLETE // Node ${currentAuthenticatedNode} has successfully completed course ${courseId}! Status logged.`);
+
+    try {
+        await supabase
+            .from('student_progress')
+            .upsert({ 
+                node_id: currentAuthenticatedNode, 
+                course_id: courseId, 
+                completed_modules: course.totalModules,
+                is_certified: true 
+            }, { onConflict: 'node_id,course_id' });
+        syncNodeProgress();
+    } catch (err) {
+        console.error("// PROGRESS TRACK FAILURE //", err.message);
+    }
+}
+    </script>
 </body>
 </html>
